@@ -1,4 +1,4 @@
-defmodule SmartChain.Aggregates do
+defmodule Harmony.Aggregates do
   @moduledoc """
   Functions to return metadata and other more useful stats/data than the node returns natively.
   """
@@ -9,7 +9,7 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
 
-      iex> SmartChain.get_recent_averages(20)
+      iex> Harmony.get_recent_averages(20)
 
   """
   @spec get_recent_averages(integer()) :: {:ok, float(), float(), float()} | {:error, String.t}
@@ -26,18 +26,18 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
       
-    iex> SmartChain.get_recent_blocks(10)
+    iex> Harmony.get_recent_blocks(10)
   
   """
   @spec get_recent_blocks(binary()) :: float
   def get_recent_blocks(sample_size) do
-    {:ok, highest_block_num} = SmartChain.block_number()
+    {:ok, highest_block_num} = Harmony.block_number()
     range_floor = highest_block_num - (sample_size - 1)
     range = highest_block_num..range_floor
     blocks = Enum.map(range, fn blocknum -> 
       {ok, block} = 
         blocknum 
-          |> SmartChain.get_block_by_number()
+          |> Harmony.get_block_by_number()
       block
     end)
   end
@@ -47,16 +47,16 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
 
-      iex> SmartChain.get_average_blocktime(blocks)
+      iex> Harmony.get_average_blocktime(blocks)
 
   """
   @spec get_average_blocktime(List.t) :: float
   def get_average_blocktime(blocks) do
     [head | tail ] = blocks
-    last_timestamp = head["timestamp"] |> SmartChain.unhex()
+    last_timestamp = head["timestamp"] |> Harmony.unhex()
     {_, sample_total} = Enum.reduce(tail, {last_timestamp, 0}, 
       fn(block, {previous_timestamp, interval_total}) -> 
-        current_timestamp = SmartChain.unhex(block["timestamp"])
+        current_timestamp = Harmony.unhex(block["timestamp"])
         interval = previous_timestamp - current_timestamp
         interval_total = interval_total + interval
         {current_timestamp, interval_total}
@@ -69,15 +69,15 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
         
-      iex> SmartChain.get_average_difficulty(blocks)
+      iex> Harmony.get_average_difficulty(blocks)
 
   """
   @spec get_average_difficulty(binary()) :: float
   def get_average_difficulty(blocks) do
     [first_block | _ ] = blocks
-    seed_acc = first_block["difficulty"] |> SmartChain.unhex()
+    seed_acc = first_block["difficulty"] |> Harmony.unhex()
     total_diff = Enum.reduce(blocks, seed_acc, fn(block, acc) -> 
-      acc + SmartChain.unhex(block["difficulty"])
+      acc + Harmony.unhex(block["difficulty"])
     end)
     average_diff = total_diff / Enum.count(blocks)
   end
@@ -87,19 +87,19 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
       
-      iex> SmartChain.Aggregates.get_recent_blocktimes(20)
+      iex> Harmony.Aggregates.get_recent_blocktimes(20)
   
   """
   @spec get_recent_blocktimes(integer()) :: List.t()
   def get_recent_blocktimes(sample_size) do
-    all = get_recent_blocks(sample_size + 1) |> Enum.reverse() # |> Enum.map(fn x -> Map.put(x, "number_int", SmartChain.unhex(x["number"])) end)
+    all = get_recent_blocks(sample_size + 1) |> Enum.reverse() # |> Enum.map(fn x -> Map.put(x, "number_int", Harmony.unhex(x["number"])) end)
     [head | tail ] = all
-    last_timestamp = head |> Map.get("timestamp") |> SmartChain.unhex()
+    last_timestamp = head |> Map.get("timestamp") |> Harmony.unhex()
     {_, recent_blocktimes} = Enum.reduce(tail, {last_timestamp, []}, 
     fn(block, {previous_timestamp, all_intervals}) -> 
-      current_timestamp = SmartChain.unhex(block["timestamp"])
+      current_timestamp = Harmony.unhex(block["timestamp"])
       interval = current_timestamp - previous_timestamp
-      number = SmartChain.unhex(block["number"])
+      number = Harmony.unhex(block["number"])
       {current_timestamp, all_intervals ++ [[number,interval]]}
     end)
     recent_blocktimes
@@ -110,7 +110,7 @@ defmodule SmartChain.Aggregates do
 
   ## Example:
 
-      iex> SmartChain.get_recent_blocktimes(20)
+      iex> Harmony.get_recent_blocktimes(20)
   
   """
   @spec get_recent_blocks_with_blocktimes(integer()) :: List.t()
@@ -120,9 +120,9 @@ defmodule SmartChain.Aggregates do
     last_timestamp = head |> Map.get("timestamp") |> Ethereum.unhex()
     {_, recent_blocks} = Enum.reduce(tail, {last_timestamp, []}, 
     fn(block, {previous_timestamp, blocks}) -> 
-      current_timestamp = SmartChain.unhex(block["timestamp"])
+      current_timestamp = Harmony.unhex(block["timestamp"])
       # interval = :os.system_time(:seconds) - previous_timestamp
-      number = SmartChain.unhex(block["number"])
+      number = Harmony.unhex(block["number"])
       b = %{
         number: number,
         hash: block["hash"],
@@ -140,14 +140,14 @@ defmodule SmartChain.Aggregates do
 
   ## Example: 
 
-      iex> SmartChain.get_recent_transactions_per_block(20)
+      iex> Harmony.get_recent_transactions_per_block(20)
 
   """
   @spec get_recent_transactions_per_block(integer) :: List.t()
   def get_recent_transactions_per_block(sample_size) do
     blocks = get_recent_blocks(sample_size)
     recent_transactions_per_block = Enum.map(blocks, fn block -> 
-      number = SmartChain.unhex(block["number"])
+      number = Harmony.unhex(block["number"])
       txn_count = Enum.count(block["transactions"])
       [number, txn_count]
     end) 
