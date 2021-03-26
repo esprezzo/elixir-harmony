@@ -153,4 +153,3 @@ iex> Harmony.send_transaction("0xe55c5bb9d42307e03fb4aa39ccb878c16f6f901e", "0xf
 - defdelegate decode_abi_event(data, signature), to: ABI, as: :decode_event
 - defdelegate abi_keys_to_decimal(map, keys), to: ABI, as: :keys_to_decimal
 ```
-# elixir-harmony
