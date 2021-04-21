@@ -1,11 +1,9 @@
 defmodule Harmony.Transport do
   require Logger
   require IEx
-
+  
   use Tesla
-
-  plug Tesla.Middleware.Headers, [
-  ]
+  plug Tesla.Middleware.Headers, []
   plug Tesla.Middleware.JSON
 
   @doc false
@@ -48,14 +46,8 @@ defmodule Harmony.Transport do
 
     # Requires --rpcvhosts=* on  aemon - TODO: Clean up move PORT to run script 
     daemon_host = case System.get_env("HARMONY_USE_SSL") do
-      "false" -> 
-        #   case infura_project_id do
-        #     nil -> "https://" <> smart_chain_host <> ":" <> smart_chain_port
-        #     key -> "https://" <> smart_chain_host <> "/" <> infura_project_id 
-        #   end
-        "http://" <> harmony_host <> ":" <> harmony_port
-      _ -> 
-        "https://" <> harmony_host <> ":" <> harmony_port
+      "false" -> "http://" <> harmony_host <> ":" <> harmony_port
+      _ -> "https://" <> harmony_host <> ":" <> harmony_port
     end
     
     Logger.info "HARMONY DAEMON_HOST: #{daemon_host}"
