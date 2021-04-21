@@ -87,7 +87,5 @@ defmodule Harmony do
   defdelegate decode_abi_data(types_signature, data), to: ABI, as: :decode_data
   defdelegate decode_abi_output(abi, name, output), to: ABI, as: :decode_output
   defdelegate abi_keys_to_decimal(map, keys), to: ABI, as: :keys_to_decimal
-  
-  # TX Pool functions
 
 end
