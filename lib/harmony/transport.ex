@@ -22,7 +22,7 @@ defmodule Harmony.Transport do
     harmony_host = case System.get_env("HARMONY_HOST") do
       nil ->
         # Logger.error "HARMONY_HOST ENVIRONMENT VARIABLE NOT SET. Using 127.0.0.1"
-        "https://api.s0.t.hmny.io/"
+        "api.s0.t.hmny.io/"
       url ->
         # Logger.info "HARMONY_HOST ENVIRONMENT VARIABLE SET. Using #{url}"
         url
