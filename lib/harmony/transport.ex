@@ -31,7 +31,7 @@ defmodule Harmony.Transport do
     harmony_port = case System.get_env("HARMONY_PORT") do
       nil ->
         # Logger.error "HARMONY_PORT ENVIRONMENT VARIABLE NOT SET. Using 8545"
-        443
+        "443"
       port ->
         # Logger.info "HARMONY_PORT ENVIRONMENT VARIABLE SET. Using #{port}"
         port
