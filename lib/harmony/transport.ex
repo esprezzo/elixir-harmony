@@ -50,7 +50,7 @@ defmodule Harmony.Transport do
       _ -> "https://" <> harmony_host <> ":" <> harmony_port
     end
     
-    Logger.info "HARMONY DAEMON_HOST: #{daemon_host}"
+    # Logger.info "HARMONY DAEMON_HOST: #{daemon_host}"
     result = 
       __MODULE__.post!(daemon_host, enc)
       |> Map.get(:body)
