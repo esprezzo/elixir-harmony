@@ -428,7 +428,6 @@ defmodule Harmony.Contract do
           %{address: contract_info[:address], topics: topics},
           event_data_format_helper(event_data)
         )
-      # Logger.warn "Event payload #{inspect payload}"
       
       {:ok, filter_id} = Harmony.new_filter(payload)
    
@@ -446,7 +445,6 @@ defmodule Harmony.Contract do
     end
 
     def handle_call({:get_filter_logs, filter_id}, _from, state) do
-      # "0x" <> filter_unhex = filter_id
       filter_unhex = 
         case filter_id do
           "0x" <> n -> n
@@ -456,16 +454,13 @@ defmodule Harmony.Contract do
       filter_info = Map.get(state[:filters], filter_unhex)
       event_attributes =
         get_event_attributes(state, filter_info[:contract_name], filter_info[:event_name])
-      # IEx.pry
-      {:ok, logs} = Harmony.get_filter_logs(filter_id)
       
-      Logger.warn "handle_call({:get_filter_logs})"
+      {:ok, logs} = Harmony.get_filter_logs(filter_id)
    
       formatted_logs =
         if logs && logs != [] do
           Enum.map(logs, fn log ->
-            # Logger.warn "event_attributes: #{inspect event_attributes}"
-            # Logger.warn "log: #{inspect log}"
+
             formatted_log =
               Enum.reduce(
                 [
