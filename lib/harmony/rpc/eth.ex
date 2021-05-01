@@ -373,11 +373,8 @@ end
   @spec new_filter(map()) :: {:ok, binary()} | {:error, String.t}
   def new_filter(map) do
     case Transport.send("eth_newFilter",[map]) do
-      {:ok, res} ->
-        Logger.warn "Harmony.Eth.new_filter"
-        {:ok, res}
-      {:error, reason} ->
-        {:error, reason}
+      {:ok, res} -> {:ok, res}
+      {:error, reason} -> {:error, reason}
     end
   end
 
