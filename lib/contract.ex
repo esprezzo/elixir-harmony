@@ -78,6 +78,16 @@ defmodule Harmony.Contract do
       )
     end
 
+    @spec get_logs(binary()) :: {:ok, list()}
+    @doc "Using saved information related to the filter id, event logs are formatted properly"
+    def get_logs(map) do
+      GenServer.call(
+        ContractManager,
+        {:get_logs, map},
+        100000000
+      )
+    end
+
     @spec get_filter_changes(binary()) :: {:ok, list()}
     @doc "Using saved information related to the filter id, event logs are formatted properly"
     def get_filter_changes(filter_id) do

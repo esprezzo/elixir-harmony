@@ -72,12 +72,12 @@ defmodule Harmony.ContractMulti do
       )
     end
 
-    @spec get_logs(atom(), binary()) :: {:ok, list()}
+    @spec get_logs(atom(), binary(), binary(), binary()) :: {:ok, list()}
     @doc "Using saved information related to the filter id, event logs are formatted properly"
-    def get_logs(process_name, hash) do
+    def get_logs(process_name, contract_name, event_name, event_data \\ %{}) do
       GenServer.call(
         process_name,
-        {:get_logs, hash},
+        {:get_logs, {contract_name, event_name, event_data}},
         100000000
       )
     end
@@ -455,10 +455,59 @@ defmodule Harmony.ContractMulti do
         end 
 
       filter_info = Map.get(state[:filters], filter_unhex)
+      Logger.warn(filter_info)
       event_attributes =
         get_event_attributes(state, filter_info[:contract_name], filter_info[:event_name])
       
       {:ok, logs} = Harmony.get_filter_logs(filter_id)
+      
+   
+      formatted_logs =
+        if logs && logs != [] do
+          Enum.map(logs, fn log ->
+            # Logger.warn "event_attributes: #{inspect event_attributes}"
+            # event_attributes: %{non_indexed_names: ["value"], signature: "Transfer(uint256)", topic_names: ["from", "to"], topic_types: ["(address)", "(address)"]}
+            # Logger.warn "log: #{inspect log}"
+            formatted_log =
+              Enum.reduce(
+                [
+                  Harmony.abi_keys_to_decimal(log, [
+                    "blockNumber",
+                    "logIndex",
+                    "transactionIndex",
+                    "transactionLogIndex"
+                  ]),
+                  format_log_data(log, event_attributes)
+                ],
+                &Map.merge/2
+              )
+            formatted_log
+          end)
+        else
+          logs
+        end
+      {:reply, {:ok, formatted_logs}, state}
+    end
+
+   def handle_call({:get_logs, {contract_name, event_name, event_data}}, _from, state) do
+      contract_info = state[contract_name]
+
+      event_signature = contract_info[:event_names][event_name]
+      topic_types = contract_info[:events][event_signature][:topic_types]
+      topic_names = contract_info[:events][event_signature][:topic_names]
+
+      topics = filter_topics_helper(event_signature, event_data, topic_types, topic_names)
+      
+      payload =
+        Map.merge(
+          %{address: contract_info[:address], topics: topics},
+          event_data_format_helper(event_data)
+        )
+    
+      event_attributes =
+        get_event_attributes(state, contract_info[:address], event_name)
+            
+      {:ok, logs} = Harmony.get_logs(payload)
       
    
       formatted_logs =
@@ -487,7 +536,6 @@ defmodule Harmony.ContractMulti do
       {:reply, {:ok, formatted_logs}, state}
     end
 
-   
     def handle_call({:address, name}, _from, state) do
       {:reply, state[name][:address], state}
     end
