@@ -72,6 +72,16 @@ defmodule Harmony.ContractMulti do
       )
     end
 
+    @spec get_logs(atom(), binary()) :: {:ok, list()}
+    @doc "Using saved information related to the filter id, event logs are formatted properly"
+    def get_logs(process_name, hash) do
+      GenServer.call(
+        process_name,
+        {:get_logs, hash},
+        100000000
+      )
+    end
+
     @spec get_filter_changes(binary(), binary()) :: {:ok, list()}
     @doc "Using saved information related to the filter id, event logs are formatted properly"
     def get_filter_changes(process_name, filter_id) do

@@ -333,8 +333,8 @@ end
 
 """
 @spec get_logs(binary()) :: {:ok, binary()} | {:error, String.t}
-def get_filter_logs(hash) do
-  case Transport.send("eth_getLogs", [hash]) do
+def get_logs(map) do
+  case Transport.send("eth_getLogs", [map]) do
     {:ok, logs} ->
       {:ok, logs}
     {:error, reason} ->
