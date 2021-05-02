@@ -324,6 +324,25 @@ def get_filter_logs(hash) do
 end
 
 @doc """
+  Get logs for EXISTING filter ID
+    
+  ## Example:
+
+      iex> get_filter_logs(filter_hash)
+      {:ok, 3858216}
+
+"""
+@spec get_logs(binary()) :: {:ok, binary()} | {:error, String.t}
+def get_filter_logs(hash) do
+  case Transport.send("eth_getLogs", [hash]) do
+    {:ok, logs} ->
+      {:ok, logs}
+    {:error, reason} ->
+      {:error, reason}
+  end
+end
+
+@doc """
   Show transaction for hash
     
   ## Example:

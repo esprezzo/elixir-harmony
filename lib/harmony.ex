@@ -35,6 +35,7 @@ defmodule Harmony do
   defdelegate transaction_count(hash), to: Eth
   defdelegate get_filter_changes(hash), to: Eth
   defdelegate get_filter_logs(hash), to: Eth
+  defdelegate get_logs(hash), to: Eth
   defdelegate eth_call(params), to: Eth
   defdelegate eth_send(transaction), to: Eth, as: :eth_send_transaction
   defdelegate uninstall_filter(id), to: Eth
