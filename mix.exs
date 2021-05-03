@@ -44,7 +44,7 @@ defmodule Harmony.Mixfile do
     [
       {:tesla, "~> 1.3.0"},
       # optional, but recommended adapter
-      {hackney, ".*", {git, "git://github.com/benoitc/hackney.git", {branch, "master"}}},
+      {:hackney, ".*", {git, "git://github.com/benoitc/hackney.git", {branch, "master"}}},
       {:ex_abi, "~> 0.5.1"},
       {:ex_keccak, "~> 0.1.2"},
       # optional, required by JSON middleware
