@@ -4,7 +4,7 @@ defmodule Harmony.Mixfile do
   def project do
     [app: :harmony,
      version: "0.1.0",
-     elixir: "~> 1.4",
+     elixir: "~> 1.12",
      package: package(),
      description: description(),
      name: "Harmony",
@@ -42,7 +42,7 @@ defmodule Harmony.Mixfile do
 
   defp deps do
     [
-      {:tesla, "~> 1.3.0"},
+      {:tesla, "~> 1.4"},
       # optional, but recommended adapter
       # {:hackney, ".*", {git, "git://github.com/benoitc/hackney.git", {branch, "master"}}},
       {:ex_abi, "~> 0.5.1"},
