@@ -43,14 +43,12 @@ defmodule Harmony.Mixfile do
   defp deps do
     [
       {:tesla, "~> 1.4"},
-      # optional, but recommended adapter
-      # {:hackney, ".*", {git, "git://github.com/benoitc/hackney.git", {branch, "master"}}},
-      {:ex_abi, "~> 0.5.1"},
-      {:ex_keccak, "~> 0.1.2"},
-      # optional, required by JSON middleware
-      {:jason, ">= 1.0.0"},
+      {:hackney, "~> 1.17"}, # optional, but recommended adapter
+      {:jason, ">= 1.0.0"}, # optional, required by JSON middleware
+
+      {:ex_abi, "~> 0.5.8"},
+      {:ex_keccak, "~> 0.2.0"},
       {:hexate,  ">= 0.6.0"},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
  		  {:ex_doc, "~> 0.14", only: :dev}
    ]
   end
